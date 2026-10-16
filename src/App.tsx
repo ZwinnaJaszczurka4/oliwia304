@@ -82,6 +82,34 @@ interface Album{
 
 
 function App(){
+
+  /*
+  
+  Array.map()
+
+  wykorzystujac map robic cialo funkcji
+
+  Array.filter
+
+  [m1, m2, m3].map((m)=> 
+(
+  <Movie {costamcos}
+  ))
+
+
+
+
+  lista w liscie
+  
+  <Album ...> jakis komponent {children} po f12 widac
+    <track><>
+    </album>
+  */ 
+ let filmy:Movie []=[];
+  filmy.push({name: "Spiderman", year: "1990", photo: "https://movieposters.pl/environment/cache/images/productGfx_537_750_750/137-A1.webp" });
+  
+
+
   return (
     // <div>
     //   <Greeter />
