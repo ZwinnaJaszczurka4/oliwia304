@@ -24,9 +24,9 @@ function Movie({photo, year, name}: Movie){
   /**nazwa rok zdjecie */
   return (
     <p>
-      <img src={photo}></img><br />
-      Nazwa: {name}<br />
-      Rok: {year} 
+      <img src={photo} className="movieimg" ></img><br />
+     {name}<br />
+      {year} 
 
     </p>
   )
@@ -34,7 +34,7 @@ function Movie({photo, year, name}: Movie){
 
 interface Movie{
   photo?:string;
-  year:string;
+  year:number;
   name:string;
 }
 
@@ -54,12 +54,11 @@ function Book({cover, title, year, pages}: Book){
 interface Book{
   cover?:string;
   title: string;
-  year:string;
-  pages:string;
+  year:number;
+  pages:number;
 }
 
 function MusicAlbum({cover, title, bandName, genre, year} : Album ){
-
   return(
     <p>
       <img src={cover}></img><br/>
@@ -67,7 +66,6 @@ function MusicAlbum({cover, title, bandName, genre, year} : Album ){
       {bandName}<br/>
       {genre}<br/>
       Release Year: {year}<br/>
-    
     </p>
   )
 }
@@ -77,7 +75,22 @@ interface Album{
   title:string;
   bandName:string;
   genre:string;
-  year:string;
+  year:number;
+}
+
+function Track({title, length} : Track){
+  return(
+    <p>
+      {title}  {length}
+    </p>
+  )
+}
+
+interface Track{
+  /** title of the song (string) */
+  title:string;
+  /** duration of the song (string) */
+  length :string;
 }
 
 
@@ -85,19 +98,7 @@ function App(){
 
   /*
   
-  Array.map()
-
-  wykorzystujac map robic cialo funkcji
-
   Array.filter
-
-  [m1, m2, m3].map((m)=> 
-(
-  <Movie {costamcos}
-  ))
-
-
-
 
   lista w liscie
   
@@ -105,36 +106,176 @@ function App(){
     <track><>
     </album>
   */ 
- let filmy:Movie []=[];
-  filmy.push({name: "Spiderman", year: "1990", photo: "https://movieposters.pl/environment/cache/images/productGfx_537_750_750/137-A1.webp" });
+ let filmy: Movie[] = [
+    {
+        name: "Spiderman",
+        year: 2002,
+        photo: "https://a.ltrbxd.com/resized/film-poster/5/1/5/6/1/51561-spider-man-0-2000-0-3000-crop.jpg?v=a7394840f4"
+    },
+    {
+      name: "Batman",
+      year: 2022,
+      photo: "https://a.ltrbxd.com/resized/film-poster/3/4/8/9/1/4/348914-the-batman-0-2000-0-3000-crop.jpg?v=ec12a8b7ce"
+    },
+    {
+      name: "Avengers. Endgame",
+      year: 2019,
+      photo: "https://a.ltrbxd.com/resized/film-poster/2/2/6/6/6/0/226660-avengers-endgame-0-2000-0-3000-crop.jpg?v=d4006bfd5e"
+    }
+];
+
+let books: Book[] = [
+  {
+    cover: "https://s.lubimyczytac.pl/upload/books/138000/138913/170x243.jpg",
+    title: "Wiedźmin",
+    year: 1990,
+    pages: 500
+  },
+  {
+    cover: "https://s.lubimyczytac.pl/upload/books/5191000/5191464/1274660-170x243.jpg",
+    title: "Zbrodnia i kara",
+    year: 1966,
+    pages: 592
+  },
+  {
+    cover: "https://s.lubimyczytac.pl/upload/books/4942000/4942534/1177545-170x243.jpg",
+    title: "Diuna",
+    year: 1965,
+    pages: 777
+  }
+];
+
+let albums : Album[] = [
+  {
+    title: "Mellon Collie and the Infinite sadness",
+    bandName: "Smashing Pumpkins", 
+    genre: "Rock",
+    year: 1995,
+    cover: "https://m.media-amazon.com/images/I/71Nu+PjWRYL.jpg"
+  },
+  {
+    title: "Dopamine Chamber",
+    bandName: "Fontaines D.C.",
+    genre: "Alt",
+    year: 2026,
+    cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBjEMFREgrIhIfAtCCHmaZfp0AjM93N_gz-d1gUleZ5w&s=10"
+  },
+  {
+    title: "(What's the story) Morning glory",
+    bandName: "Oasis",
+    genre: "Rock",
+    year: 1995,
+    cover: "https://m.media-amazon.com/images/I/91s+CxEDriL.jpg"
+  }
+]
+
+let tracklist: Track[] = [
+  {
+    title: "Mellon Collie and the Infinite Sadness",
+    length: "2:52"
+  },
+  {
+    title: "Tonight, Tonight",
+    length:  "4:14"
+  },
+  { 
+    title: "Jellybelly",
+    length: "3:01"
+  },
+ {
+    title: "Zero",
+    length: "2:41"
+  },
+  {
+    title: "Here Is No Why",
+    length: "3:45"
+  },
+  {
+    title: "Bullet with Butterfly Wings",
+    length: "4:18"
+  },
+  {
+    title: "To Forgive",
+    length: "4:17"
+  },
+  {
+    title: "An Ode To No One",
+    length: "4:51"
+  },
+  {
+    title: "Love",
+    length: "4:21"
+  },
+  {
+    title: "Cupid de Locke",
+    length: "2:50"
+  },
+  {
+    title: "Galapogos",
+    length: "4:47"
+  },
+  {
+    title: "Muzzle",
+    length: "3:44"
+  },
+  {
+    title: "Porcelina of the Vast Oceans",
+    length: "9:21"
+  },
+  {
+    title: "Take Me Down",
+    length: "2:52"
+  }
+]
   
-
-
+const moviesResult = filmy.map(film => {
   return (
-    // <div>
-    //   <Greeter />
-
-    //   <Greeter name ="Mario" age="15"/>
-
-    //   <Greeter name ="Luigi" age="312"/>
-
-    // </div>
-<body>
     <div>
-      <Movie photo="https://movieposters.pl/environment/cache/images/productGfx_537_750_750/137-A1.webp" name="Spiderman" year="1990" />
-      <Movie photo="https://static.posters.cz/image/750webp/133030.webp" name="Batman" year="2005"/>
-      <Movie photo="https://cdng.europosters.eu/pod_public/750/262683.jpg" name="Catman" year="1203"/>
+      <Movie name={film.name} year={film.year} photo={film.photo}/>
     </div>
-    <div>
-      <Book cover="https://s.lubimyczytac.pl/upload/books/138000/138913/170x243.jpg" title="Wiedźmin" year="1990" pages="500"/>
-      <Book cover="https://s.lubimyczytac.pl/upload/books/5191000/5191464/1274660-170x243.jpg" title="Zbrodnia i kara" year="1966" pages="592"/>
-      <Book cover="https://s.lubimyczytac.pl/upload/books/4942000/4942534/1177545-170x243.jpg" title="Diuna" year="1965" pages="777"/>
-      
-      <MusicAlbum title="Mellon Collie and the Infinite sadness" bandName="Smashing Pumpkins" genre="rock" year="1995" cover="https://m.media-amazon.com/images/I/71Nu+PjWRYL.jpg"/>
-      <MusicAlbum title="Dopamine Chamber" bandName="Fontaines D.C." genre="alt" year="2026" cover="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBjEMFREgrIhIfAtCCHmaZfp0AjM93N_gz-d1gUleZ5w&s=10"/>
-      <MusicAlbum title="(What's the story) Morning glory" bandName="Oasis" genre="rock" year="1995" cover="https://m.media-amazon.com/images/I/91s+CxEDriL.jpg"/>
+  );
+});
 
-    </div></body>
+const booksResult = books.map(book => {
+  return (
+    <div>
+      <Book cover={book.cover} title={book.title} year={book.year} pages={book.pages}
+      />
+    </div>
+  );
+});
+
+const albumsResult = albums.map(album => {
+  return (
+    <div>
+      <MusicAlbum title={album.title} bandName={album.bandName} genre={album.genre} year={album.year} cover={album.cover}
+      />
+    </div>
+  );
+});
+
+const tracks = tracklist.map(track => {
+  return (
+    <div>
+      <Track title={track.title} length={track.length}/>
+    </div>
+  )
+})
+
+  
+  return (
+    <body>
+      <div id="moviesdiv">
+        {moviesResult}
+      </div>
+      <div id="booksdiv">
+        {booksResult}
+      </div>
+      <div id="albumsdiv">
+        {albumsResult}
+        {tracks}
+      </div>
+    </body>
   )
 }
 

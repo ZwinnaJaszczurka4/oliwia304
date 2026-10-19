@@ -109,3 +109,15 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+#moviesdiv{
+  display: flex;
+  justify-content: center;
+}
+
+.movieimg{
+  width: 200px;
+  height: 300px;
+  object-fit: cover;
+  object-position: center;
+}
