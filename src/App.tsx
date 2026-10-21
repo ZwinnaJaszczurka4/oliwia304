@@ -1,10 +1,11 @@
-function Movie({ photo, year, name }: Movie) {
+function Movie({ photo, year, name, rating }: Movie) {
   /**nazwa rok zdjecie */
   return (
     <p>
       <img src={photo} className="movieimg" ></img><br />
       {name}<br />
-      {year}
+      {year}<br />
+      Rating: {rating}
 
     </p>
   )
@@ -14,6 +15,7 @@ interface Movie {
   photo?: string;
   year: number;
   name: string;
+  rating: number;
 }
 
 function Book({ cover, title, year, pages }: Book) {
@@ -252,17 +254,20 @@ function App() {
     {
       name: "Spiderman",
       year: 2002,
-      photo: "https://a.ltrbxd.com/resized/film-poster/5/1/5/6/1/51561-spider-man-0-2000-0-3000-crop.jpg?v=a7394840f4"
+      photo: "https://a.ltrbxd.com/resized/film-poster/5/1/5/6/1/51561-spider-man-0-2000-0-3000-crop.jpg?v=a7394840f4",
+      rating: 7.3
     },
     {
       name: "Batman",
       year: 2022,
-      photo: "https://a.ltrbxd.com/resized/film-poster/3/4/8/9/1/4/348914-the-batman-0-2000-0-3000-crop.jpg?v=ec12a8b7ce"
+      photo: "https://a.ltrbxd.com/resized/film-poster/3/4/8/9/1/4/348914-the-batman-0-2000-0-3000-crop.jpg?v=ec12a8b7ce",
+      rating: 7.8
     },
     {
       name: "Avengers. Endgame",
       year: 2019,
-      photo: "https://a.ltrbxd.com/resized/film-poster/2/2/6/6/6/0/226660-avengers-endgame-0-2000-0-3000-crop.jpg?v=d4006bfd5e"
+      photo: "https://a.ltrbxd.com/resized/film-poster/2/2/6/6/6/0/226660-avengers-endgame-0-2000-0-3000-crop.jpg?v=d4006bfd5e",
+      rating: 8.4
     }
   ];
 
@@ -314,19 +319,23 @@ function App() {
     }
   ]
 
-
-
-
-
-  const moviesResult = filmy.map(film => {
+  const moviesResult = filmy.sort((a, b) => (a.name > b.name ? 1 : -1)).map(film => {
     return (
       <div>
-        <Movie name={film.name} year={film.year} photo={film.photo} />
+        <Movie name={film.name} year={film.year} photo={film.photo} rating={film.rating} />
       </div>
     );
   });
 
-  const booksResult = books.map(book => {
+  const moviesAfter2010 = filmy.filter(film => film.year > 2010).map(film => {
+    return (
+      <div>
+        <Movie name={film.name} year={film.year} photo={film.photo} rating={film.rating} />
+      </div>
+    );
+  });
+
+  const booksResult = books.sort((a, b) => (a.title > b.title ? 1 : -1)).map(book => {
     return (
       <div>
         <Book cover={book.cover} title={book.title} year={book.year} pages={book.pages}
@@ -335,7 +344,16 @@ function App() {
     );
   });
 
-  const albumsResult = albums.map(album => {
+   const booksbyyear = books.sort((a, b) => (a.year > b.year ? 1 : -1)).map(book => {
+    return (
+      <div>
+        <Book cover={book.cover} title={book.title} year={book.year} pages={book.pages}
+        />
+      </div>
+    );
+  });
+
+  const albumsResult = albums.sort((a, b) => (a.title > b.title ? 1 : -1)).map(album => {
     return (
       <div>
         <MusicAlbum title={album.title} bandName={album.bandName} genre={album.genre} year={album.year} cover={album.cover} tracklist={album.tracklist}
@@ -344,16 +362,31 @@ function App() {
     );
   });
 
-
-
+  const albumsongs = albums.map(album => {
+    return (
+      <div>
+        <MusicAlbum title={album.title} bandName={album.bandName} genre={album.genre} year={album.year} cover={album.cover} tracklist={album.tracklist}
+        />
+      </div>
+    );
+  });
 
   return (
     <body>
       <div id="moviesdiv">
         {moviesResult}
       </div>
+      Movies released after 2010:
+      <div id="moviesdiv">
+       
+        {moviesAfter2010}
+      </div>
       <div id="booksdiv">
         {booksResult}
+      </div>
+      Books sorted by release year:
+      <div id="booksdiv">
+        {booksbyyear}
       </div>
       <div id="albumsdiv">
         {albumsResult}
