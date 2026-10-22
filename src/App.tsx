@@ -1,16 +1,25 @@
 import { useState } from "react";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 function Movie({ photo, year, name, rating }: Movie) {
 
   /**nazwa rok zdjecie */
   return (
-    <p>
-      <img src={photo} className="movieimg" ></img><br />
-      {name}<br />
-      {year}<br />
-      Rating: {rating} <br />
-      {rating > 8 && <span className="rating8">Polecany</span>}
-    </p>
+
+    <div className="card text-bg-secondary mb-3" data-bs-theme="dark">
+      {rating > 8 &&
+        <div className="card-header text-center"> <span className="badge bg-warning text-dark fw-bold">Polecany</span></div>}
+      <div className="card-body ">
+        <img src={photo} className="card-img-top movieimg object-fit-cover" style={{ height: "300px", width: "200px" }}></img><br />
+        <h1 className="card-title text-center mb-3" >{name}<br /></h1>
+      </div>
+      <ul className="list-group list-group-flush">
+        <li className="list-group-item text-center">{year}</li>
+        <li className="list-group-item text-center">Rating: {rating}</li>
+      </ul>
+
+    </div>
 
   )
 }
@@ -25,14 +34,22 @@ interface Movie {
 function Book({ cover, title, year, pages }: Book) {
 
   return (
-    <p>
-      <img src={cover}></img><br />
-      Title: {title}<br />
-      Release Year: {year}<br />
-      Pages: {pages}<br />
-      {year < 2000 && <span className="classic">Klasyka</span>}
-    </p>
+    <div className="card text-bg-secondary mb-3" data-bs-theme="dark">
+      {year < 2000 && (
+        <div className="card-header text-center">
+          <span className="badge bg-warning text-dark fw-bold">Klasyka</span>
+        </div>
+      )}
 
+      <div className="card-body text-center">
+        <img src={cover} className="card-img-top bookimg object-fit-cover mb-3" style={{ height: "300px", width: "200px" }} />
+        <h5 className="card-title text-center mb-0">{title}</h5>
+      </div>
+      <ul className="list-group list-group-flush">
+        <li className="list-group-item text-center">Release Year: {year}</li>
+        <li className="list-group-item text-center">Pages: {pages}</li>
+      </ul>
+    </div>
   )
 }
 
@@ -45,21 +62,39 @@ interface Book {
 
 function MusicAlbum({ cover, title, bandName, genre, year, tracklist }: Album) {
   return (
-    <p>
-      <img src={cover} className="albumimg"></img><br />
-      {title}<br />
-      {bandName}<br />
-      {genre}<br />
-      Release Year: {year}<br />
-      Tracklist:
-      {tracklist.map((track) => (
-        <div>
-          <Track title={track.title} length={track.length} />
-        </div>
-      ))}
-      {tracklist.length == 0 && <span className="notrack">Brak utworów</span>}
-    </p>
-  )
+    <div className="card text-bg-secondary mb-3" data-bs-theme="dark">
+      <div className="card-body text-center">
+        <img src={cover} className="card-img-top albumimg object-fit-cover mb-3" style={{ height: "300px", width: "300px" }} />
+
+        <h5 className="card-title text-center">{title}</h5>
+        <p className="card-text text-light">{bandName} | {genre}</p>
+      </div>
+      <ul className="list-group list-group-flush">
+        <li className="list-group-item text-center">Release Year: {year}</li>
+      </ul>
+      <div className="">
+        <table className="table table-dark table-striped table-hover">
+          <thead>
+            <tr>
+              <th className="">Tracklist</th>
+              <th className="text-end">Length</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tracklist.map((track) => (
+              <Track title={track.title} length={track.length} />
+            ))}
+
+            {tracklist.length === 0 && (
+              <tr>
+                <td colSpan={2} className="text-center text-warning">Brak utworów</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
 }
 
 interface Album {
@@ -73,10 +108,11 @@ interface Album {
 
 function Track({ title, length }: Track) {
   return (
-    <p>
-      {title}  {length}
-    </p>
-  )
+    <tr>
+      <td className="ps-3">{title}</td>
+      <td className="text-end">{length}</td>
+    </tr>
+  );
 }
 
 interface Track {
@@ -223,7 +259,7 @@ function App() {
         length: "5:41"
       },
       {
-        title: "Untitled (also known as \"The Swamp Song – Excerpt 1\")[note 1]",
+        title: "Untitled",
         length: "0:44"
       },
       {
@@ -267,7 +303,7 @@ function App() {
       rating: 7.8
     },
     {
-      name: "Avengers. Endgame",
+      name: "Avengers",
       year: 2019,
       photo: "https://a.ltrbxd.com/resized/film-poster/2/2/6/6/6/0/226660-avengers-endgame-0-2000-0-3000-crop.jpg?v=d4006bfd5e",
       rating: 8.4
@@ -378,15 +414,16 @@ function App() {
     <body>
       <h1 onClick={() => { setIsMoviesOpen(!isMoviesOpen) }}>{isMoviesOpen ? "▾ " : "▸ "}Movies</h1>
       {isMoviesOpen && (
-        <div id="allmoviesdiv">
-          <div id="moviesdiv">
+        <div id="allmovies">
+          <div className="card-group">
             {moviesResult}
           </div>
           <h2 onClick={() => { setIsMoviesAfter2010Open(!isMoviesAfter2010Open) }}>{isMoviesAfter2010Open ? "▾ " : "▸ "}Movies released after 2010:</h2>
           {isMoviesAfter2010Open && (
-            <div id="moviesdiv">
+            <div className="card-group">
               {moviesAfter2010}
             </div>
+
           )}
         </div>
       )}
@@ -395,15 +432,15 @@ function App() {
       {isBooksOpen && (
         <div id="allbooksdiv">
 
-
-          <div id="booksdiv">
+          <div className="card-group">
             {booksResult}
           </div>
           <h2 onClick={() => { setIsBooksByYearOpen(!isBooksByYearOpen) }}>{isBooksByYearOpen ? "▾ " : "▸ "}Books sorted by release year:</h2>
           {(isBooksByYearOpen && isBooksOpen) && (
-            <div id="booksdiv">
+            <div className="card-group">
               {booksbyyear}
             </div>
+
           )}
         </div>
       )}
@@ -411,14 +448,19 @@ function App() {
       <h1 onClick={() => { setIsAlbumsOpen(!isAlbumsOpen) }}>{isAlbumsOpen ? "▾ " : "▸ "}Music Albums</h1>
       {isAlbumsOpen && (
         <div id="allalbumsdiv">
-          <div id="albumsdiv">
+          <div className="card-group">
+
             {albumsResult}
+
+
           </div>
           <h2 onClick={() => { setIsMaxtracksOpen(!isMaxtracksOpen) }}>{isMaxtracksOpen ? "▾ " : "▸ "}Album with the most tracks:</h2>
           {(isMaxtracksOpen && isAlbumsOpen) && (
-            <div id="albumsdiv">
+            <div className="card-group">
+
               {maxtracksalbum}
             </div>
+
           )}
         </div>
       )}
