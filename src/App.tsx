@@ -1,13 +1,17 @@
+import { useState } from "react";
+
 function Movie({ photo, year, name, rating }: Movie) {
+
   /**nazwa rok zdjecie */
   return (
     <p>
       <img src={photo} className="movieimg" ></img><br />
       {name}<br />
       {year}<br />
-      Rating: {rating}
-
+      Rating: {rating} <br />
+      {rating > 8 && <span className="rating8">Polecany</span>}
     </p>
+
   )
 }
 
@@ -26,6 +30,7 @@ function Book({ cover, title, year, pages }: Book) {
       Title: {title}<br />
       Release Year: {year}<br />
       Pages: {pages}<br />
+      {year < 2000 && <span className="classic">Klasyka</span>}
     </p>
 
   )
@@ -47,11 +52,12 @@ function MusicAlbum({ cover, title, bandName, genre, year, tracklist }: Album) {
       {genre}<br />
       Release Year: {year}<br />
       Tracklist:
-      {tracklist?.map((track) => (
+      {tracklist.map((track) => (
         <div>
           <Track title={track.title} length={track.length} />
         </div>
       ))}
+      {tracklist.length == 0 && <span className="notrack">Brak utworów</span>}
     </p>
   )
 }
@@ -62,7 +68,7 @@ interface Album {
   bandName: string;
   genre: string;
   year: number;
-  tracklist?: Track[];
+  tracklist: Track[];
 }
 
 function Track({ title, length }: Track) {
@@ -83,16 +89,13 @@ interface Track {
 
 function App() {
 
-  /*
-  
-  Array.filter
+  const [isMoviesOpen, setIsMoviesOpen] = useState(false);
+  const [isMoviesAfter2010Open, setIsMoviesAfter2010Open] = useState(false);
+  const [isBooksOpen, setIsBooksOpen] = useState(false);
+  const [isBooksByYearOpen, setIsBooksByYearOpen] = useState(false);
+  const [isAlbumsOpen, setIsAlbumsOpen] = useState(false);
+  const [isMaxtracksOpen, setIsMaxtracksOpen] = useState(false);
 
-  lista w liscie
-  
-  <Album ...> jakis komponent {children} po f12 widac
-    <track><>
-    </album>
-  */
   let tracklistarray: Track[][] = [
     [
       {
@@ -344,7 +347,7 @@ function App() {
     );
   });
 
-   const booksbyyear = books.sort((a, b) => (a.year > b.year ? 1 : -1)).map(book => {
+  const booksbyyear = books.sort((a, b) => (a.year > b.year ? 1 : -1)).map(book => {
     return (
       <div>
         <Book cover={book.cover} title={book.title} year={book.year} pages={book.pages}
@@ -361,37 +364,66 @@ function App() {
       </div>
     );
   });
-
-  const albumsongs = albums.map(album => {
+  /*[...albums] is copy of albums*/
+  const maxtracksalbum = [...albums].sort((a, b) => b.tracklist.length - a.tracklist.length).slice(0, 1).map(album => {
     return (
       <div>
         <MusicAlbum title={album.title} bandName={album.bandName} genre={album.genre} year={album.year} cover={album.cover} tracklist={album.tracklist}
         />
       </div>
     );
-  });
-
+  }
+  )
   return (
     <body>
-      <div id="moviesdiv">
-        {moviesResult}
-      </div>
-      Movies released after 2010:
-      <div id="moviesdiv">
-       
-        {moviesAfter2010}
-      </div>
-      <div id="booksdiv">
-        {booksResult}
-      </div>
-      Books sorted by release year:
-      <div id="booksdiv">
-        {booksbyyear}
-      </div>
-      <div id="albumsdiv">
-        {albumsResult}
-        {/* {tracks} */}
-      </div>
+      <h1 onClick={() => { setIsMoviesOpen(!isMoviesOpen) }}>{isMoviesOpen ? "▾ " : "▸ "}Movies</h1>
+      {isMoviesOpen && (
+        <div id="allmoviesdiv">
+          <div id="moviesdiv">
+            {moviesResult}
+          </div>
+          <h2 onClick={() => { setIsMoviesAfter2010Open(!isMoviesAfter2010Open) }}>{isMoviesAfter2010Open ? "▾ " : "▸ "}Movies released after 2010:</h2>
+          {isMoviesAfter2010Open && (
+            <div id="moviesdiv">
+              {moviesAfter2010}
+            </div>
+          )}
+        </div>
+      )}
+
+      <h1 onClick={() => { setIsBooksOpen(!isBooksOpen) }}>{isBooksOpen ? "▾ " : "▸ "}Books</h1>
+      {isBooksOpen && (
+        <div id="allbooksdiv">
+
+
+          <div id="booksdiv">
+            {booksResult}
+          </div>
+          <h2 onClick={() => { setIsBooksByYearOpen(!isBooksByYearOpen) }}>{isBooksByYearOpen ? "▾ " : "▸ "}Books sorted by release year:</h2>
+          {(isBooksByYearOpen && isBooksOpen) && (
+            <div id="booksdiv">
+              {booksbyyear}
+            </div>
+          )}
+        </div>
+      )}
+
+      <h1 onClick={() => { setIsAlbumsOpen(!isAlbumsOpen) }}>{isAlbumsOpen ? "▾ " : "▸ "}Music Albums</h1>
+      {isAlbumsOpen && (
+        <div id="allalbumsdiv">
+          <div id="albumsdiv">
+            {albumsResult}
+          </div>
+          <h2 onClick={() => { setIsMaxtracksOpen(!isMaxtracksOpen) }}>{isMaxtracksOpen ? "▾ " : "▸ "}Album with the most tracks:</h2>
+          {(isMaxtracksOpen && isAlbumsOpen) && (
+            <div id="albumsdiv">
+              {maxtracksalbum}
+            </div>
+          )}
+        </div>
+      )}
+
+
     </body>
   )
 }
