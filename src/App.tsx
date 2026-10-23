@@ -1,13 +1,21 @@
 import { useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-
+function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
+  console.log(event);
+  console.log(event.target);
+}
+export function LoggingButton() {
+  return (
+    <button onClick={handleClick}>Kliknij mnie</button>
+  );
+}
 function Movie({ photo, year, name, rating }: Movie) {
 
   /**nazwa rok zdjecie */
   return (
 
-    <div className="card text-bg-secondary mb-3" data-bs-theme="dark">
+    <div className="card text-bg-secondary mb-3" data-bs-theme="dark" onClick={() => console.log("Wybrano film: " + name)}>
       {rating > 8 &&
         <div className="card-header text-center"> <span className="badge bg-warning text-dark fw-bold">Polecany</span></div>}
       <div className="card-body ">
@@ -18,7 +26,7 @@ function Movie({ photo, year, name, rating }: Movie) {
         <li className="list-group-item text-center">{year}</li>
         <li className="list-group-item text-center">Rating: {rating}</li>
       </ul>
-
+      <button onClick={() => console.log("pokaz szczegoly placeholder")}>Pokaż szczegóły</button>
     </div>
 
   )
@@ -247,6 +255,7 @@ function App() {
         length: "3:59"
       },
       {
+
         title: "Wonderwall",
         length: "4:18"
       },
