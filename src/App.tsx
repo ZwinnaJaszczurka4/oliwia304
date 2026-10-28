@@ -14,20 +14,20 @@ function Movie({ photo, year, name, rating }: Movie) {
 
   /**nazwa rok zdjecie */
   return (
-
-    <div className="card text-bg-secondary mb-3" data-bs-theme="dark" onClick={() => console.log("Wybrano film: " + name)}>
-      {rating > 8 &&
-        <div className="card-header text-center"> <span className="badge bg-warning text-dark fw-bold">Polecany</span></div>}
-      <div className="card-body ">
-        <img src={photo} className="card-img-top movieimg object-fit-cover" style={{ height: "300px", width: "200px" }}></img><br />
-        <h1 className="card-title text-center mb-3" >{name}<br /></h1>
+    
+      <div className="card text-bg-secondary mb-3" data-bs-theme="dark" onClick={() => console.log("Wybrano film: " + name)}>
+        {rating > 8 &&
+          <div className="card-header text-center"> <span className="badge bg-warning text-dark fw-bold">Polecany</span></div>}
+        <div className="card-body ">
+          <img src={photo} className="card-img-top movieimg object-fit-cover" style={{ height: "300px", width: "200px" }}></img><br />
+          <h1 className="card-title text-center mb-3" >{name}<br /></h1>
+        </div>
+        <ul className="list-group list-group-flush">
+          <li className="list-group-item text-center">{year}</li>
+          <li className="list-group-item text-center">Rating: {rating}</li>
+        </ul>
+        <button onClick={() => console.log("pokaz szczegoly placeholder")}>Pokaż szczegóły</button>
       </div>
-      <ul className="list-group list-group-flush">
-        <li className="list-group-item text-center">{year}</li>
-        <li className="list-group-item text-center">Rating: {rating}</li>
-      </ul>
-      <button onClick={() => console.log("pokaz szczegoly placeholder")}>Pokaż szczegóły</button>
-    </div>
 
   )
 }
@@ -367,9 +367,9 @@ function App() {
     }
   ]
 
-  const moviesResult = filmy.sort((a, b) => (a.name > b.name ? 1 : -1)).map(film => {
+  const moviesResult = filmy.sort((a, b) => a.name.localeCompare(b.name)).map(film => {
     return (
-      <div>
+      <div className="col">
         <Movie name={film.name} year={film.year} photo={film.photo} rating={film.rating} />
       </div>
     );
@@ -377,33 +377,33 @@ function App() {
 
   const moviesAfter2010 = filmy.filter(film => film.year > 2010).map(film => {
     return (
-      <div>
+      <div className="col">
         <Movie name={film.name} year={film.year} photo={film.photo} rating={film.rating} />
       </div>
     );
   });
 
-  const booksResult = books.sort((a, b) => (a.title > b.title ? 1 : -1)).map(book => {
+  const booksResult = books.sort((a, b) => a.title.localeCompare(b.title)).map(book => {
     return (
-      <div>
+      <div className="col">
         <Book cover={book.cover} title={book.title} year={book.year} pages={book.pages}
         />
       </div>
     );
   });
 
-  const booksbyyear = books.sort((a, b) => (a.year > b.year ? 1 : -1)).map(book => {
+  const booksbyyear = books.sort((a, b) => a.year - b.year).map(book => {
     return (
-      <div>
+      <div className="col">
         <Book cover={book.cover} title={book.title} year={book.year} pages={book.pages}
         />
       </div>
     );
   });
 
-  const albumsResult = albums.sort((a, b) => (a.title > b.title ? 1 : -1)).map(album => {
+  const albumsResult = albums.sort((a, b) => a.title.localeCompare(b.title)).map(album => {
     return (
-      <div>
+      <div className="col">
         <MusicAlbum title={album.title} bandName={album.bandName} genre={album.genre} year={album.year} cover={album.cover} tracklist={album.tracklist}
         />
       </div>
@@ -412,7 +412,7 @@ function App() {
   /*[...albums] is copy of albums*/
   const maxtracksalbum = [...albums].sort((a, b) => b.tracklist.length - a.tracklist.length).slice(0, 1).map(album => {
     return (
-      <div>
+      <div className="col">
         <MusicAlbum title={album.title} bandName={album.bandName} genre={album.genre} year={album.year} cover={album.cover} tracklist={album.tracklist}
         />
       </div>
@@ -420,16 +420,16 @@ function App() {
   }
   )
   return (
-    <body>
+    <div className="container text-center">
       <h1 onClick={() => { setIsMoviesOpen(!isMoviesOpen) }}>{isMoviesOpen ? "▾ " : "▸ "}Movies</h1>
       {isMoviesOpen && (
-        <div id="allmovies">
-          <div className="card-group">
+        <div id="allmovies" className="col">
+          <div className="row justify-content-center">
             {moviesResult}
           </div>
           <h2 onClick={() => { setIsMoviesAfter2010Open(!isMoviesAfter2010Open) }}>{isMoviesAfter2010Open ? "▾ " : "▸ "}Movies released after 2010:</h2>
           {isMoviesAfter2010Open && (
-            <div className="card-group">
+            <div className="row justify-content-center">
               {moviesAfter2010}
             </div>
 
@@ -439,14 +439,14 @@ function App() {
 
       <h1 onClick={() => { setIsBooksOpen(!isBooksOpen) }}>{isBooksOpen ? "▾ " : "▸ "}Books</h1>
       {isBooksOpen && (
-        <div id="allbooksdiv">
+        <div id="allbooksdiv" className="col">
 
-          <div className="card-group">
+          <div className="row justify-content-center">
             {booksResult}
           </div>
           <h2 onClick={() => { setIsBooksByYearOpen(!isBooksByYearOpen) }}>{isBooksByYearOpen ? "▾ " : "▸ "}Books sorted by release year:</h2>
           {(isBooksByYearOpen && isBooksOpen) && (
-            <div className="card-group">
+            <div className="row justify-content-center">
               {booksbyyear}
             </div>
 
@@ -456,8 +456,8 @@ function App() {
 
       <h1 onClick={() => { setIsAlbumsOpen(!isAlbumsOpen) }}>{isAlbumsOpen ? "▾ " : "▸ "}Music Albums</h1>
       {isAlbumsOpen && (
-        <div id="allalbumsdiv">
-          <div className="card-group">
+        <div id="allalbumsdiv" className="col">
+          <div className="row justify-content-center">
 
             {albumsResult}
 
@@ -465,7 +465,7 @@ function App() {
           </div>
           <h2 onClick={() => { setIsMaxtracksOpen(!isMaxtracksOpen) }}>{isMaxtracksOpen ? "▾ " : "▸ "}Album with the most tracks:</h2>
           {(isMaxtracksOpen && isAlbumsOpen) && (
-            <div className="card-group">
+            <div className="row justify-content-center">
 
               {maxtracksalbum}
             </div>
@@ -475,7 +475,7 @@ function App() {
       )}
 
 
-    </body>
+    </div>
   )
 }
 
