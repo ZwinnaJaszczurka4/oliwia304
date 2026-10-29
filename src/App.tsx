@@ -1,34 +1,33 @@
 import { useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
-  console.log(event);
-  console.log(event.target);
-}
-export function LoggingButton() {
-  return (
-    <button onClick={handleClick}>Kliknij mnie</button>
-  );
-}
+// function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
+//   console.log(event);
+//   console.log(event.target);
+// }
+// export function LoggingButton() {
+//   return (
+//     <button onClick={handleClick}>Kliknij mnie</button>
+//   );
+// }
 function Movie({ photo, year, name, rating }: Movie) {
 
   /**nazwa rok zdjecie */
   return (
-    
-      <div className="card text-bg-secondary mb-3" data-bs-theme="dark" onClick={() => console.log("Wybrano film: " + name)}>
-        {rating > 8 &&
-          <div className="card-header text-center"> <span className="badge bg-warning text-dark fw-bold">Polecany</span></div>}
-        <div className="card-body ">
-          <img src={photo} className="card-img-top movieimg object-fit-cover" style={{ height: "300px", width: "200px" }}></img><br />
-          <h1 className="card-title text-center mb-3" >{name}<br /></h1>
-        </div>
-        <ul className="list-group list-group-flush">
-          <li className="list-group-item text-center">{year}</li>
-          <li className="list-group-item text-center">Rating: {rating}</li>
-        </ul>
-        <button onClick={() => console.log("pokaz szczegoly placeholder")}>Pokaż szczegóły</button>
-      </div>
 
+    <div className="card text-bg-secondary mb-3" data-bs-theme="dark" onClick={() => console.log("Wybrano film: " + name)}>
+      {rating > 8 &&
+        <div className="card-header text-center"> <span className="badge bg-warning text-dark fw-bold">Polecany</span></div>}
+      <div className="card-body ">
+        <img src={photo} className="card-img-top movieimg object-fit-cover" style={{ height: "300px", width: "200px" }}></img><br />
+        <h1 className="card-title text-center mb-3" >{name}<br /></h1>
+      </div>
+      <ul className="list-group list-group-flush">
+        <li className="list-group-item text-center">{year}</li>
+        <li className="list-group-item text-center">Rating: {rating}</li>
+      </ul>
+      <button onClick={(event) => handleMovieClick(event, name)}>Pokaż szczegóły</button>
+    </div>
   )
 }
 
@@ -68,6 +67,17 @@ interface Book {
   pages: number;
 }
 
+function handleSongClick(event: React.MouseEvent<HTMLTableRowElement>, title: string, albumTitle: string) {
+  event.stopPropagation();
+  console.log("Wybrana piosenka: " + title + " z albumu " + albumTitle);
+}
+
+function handleMovieClick(event: React.MouseEvent<HTMLButtonElement>, name: string) {
+  event.stopPropagation();
+  console.log("Pokaz szczegóły tylko dla " + name);
+}
+
+
 function MusicAlbum({ cover, title, bandName, genre, year, tracklist }: Album) {
   return (
     <div className="card text-bg-secondary mb-3" data-bs-theme="dark">
@@ -90,8 +100,10 @@ function MusicAlbum({ cover, title, bandName, genre, year, tracklist }: Album) {
           </thead>
           <tbody>
             {tracklist.map((track) => (
-              <Track title={track.title} length={track.length} />
+              <Track title={track.title} length={track.length} albumTitle={track.albumTitle} />
             ))}
+
+
 
             {tracklist.length === 0 && (
               <tr>
@@ -114,9 +126,9 @@ interface Album {
   tracklist: Track[];
 }
 
-function Track({ title, length }: Track) {
+function Track({ title, length, albumTitle }: Track) {
   return (
-    <tr>
+    <tr onClick={(event) => handleSongClick(event, title, albumTitle || "Nieznany album")}>
       <td className="ps-3">{title}</td>
       <td className="text-end">{length}</td>
     </tr>
@@ -128,6 +140,8 @@ interface Track {
   title: string;
   /** duration of the song (string) */
   length: string;
+
+  albumTitle: string;
 }
 
 
@@ -139,161 +153,217 @@ function App() {
   const [isBooksByYearOpen, setIsBooksByYearOpen] = useState(false);
   const [isAlbumsOpen, setIsAlbumsOpen] = useState(false);
   const [isMaxtracksOpen, setIsMaxtracksOpen] = useState(false);
+  const [isMovieSearchingOpen, setIsMovieSearchingOpen] = useState(false);
+  const [MovieText, changeMovieText] = useState("");
+  const [BookText, changeBookText] = useState("");
+  const [AlbumText, changeAlbumText] = useState("");
+
+  function movieSearch(event: React.ChangeEvent<HTMLInputElement>) {
+    console.log(event.target.value);
+    changeMovieText(event.target.value);
+  }
+
+    function bookSearch(event: React.ChangeEvent<HTMLInputElement>) {
+    console.log(event.target.value);
+    changeBookText(event.target.value);
+  }
+
+  function albumSearch(event: React.ChangeEvent<HTMLInputElement>) {
+    console.log(event.target.value);
+    changeAlbumText(event.target.value);
+  }
 
   let tracklistarray: Track[][] = [
     [
       {
         title: "Mellon Collie and the Infinite Sadness",
-        length: "2:52"
+        length: "2:52",
+        albumTitle: "Mellon Collie and the Infinite sadness"
       },
       {
         title: "Tonight, Tonight",
-        length: "4:14"
+        length: "4:14",
+        albumTitle: "Mellon Collie and the Infinite sadness"
       },
       {
         title: "Jellybelly",
-        length: "3:01"
+        length: "3:01",
+        albumTitle: "Mellon Collie and the Infinite sadness"
       },
       {
         title: "Zero",
-        length: "2:41"
+        length: "2:41",
+        albumTitle: "Mellon Collie and the Infinite sadness"
       },
       {
         title: "Here Is No Why",
-        length: "3:45"
+        length: "3:45",
+        albumTitle: "Mellon Collie and the Infinite sadness"
       },
       {
         title: "Bullet with Butterfly Wings",
-        length: "4:18"
+        length: "4:18",
+        albumTitle: "Mellon Collie and the Infinite sadness"
       },
       {
         title: "To Forgive",
-        length: "4:17"
+        length: "4:17",
+        albumTitle: "Mellon Collie and the Infinite sadness"
       },
       {
         title: "An Ode To No One",
-        length: "4:51"
+        length: "4:51",
+        albumTitle: "Mellon Collie and the Infinite sadness"
       },
       {
         title: "Love",
-        length: "4:21"
+        length: "4:21",
+        albumTitle: "Mellon Collie and the Infinite sadness"
       },
       {
         title: "Cupid de Locke",
-        length: "2:50"
+        length: "2:50",
+        albumTitle: "Mellon Collie and the Infinite sadness"
       },
       {
         title: "Galapogos",
-        length: "4:47"
+        length: "4:47",
+        albumTitle: "Mellon Collie and the Infinite sadness"
       },
       {
         title: "Muzzle",
-        length: "3:44"
+        length: "3:44",
+        albumTitle: "Mellon Collie and the Infinite sadness"
       },
       {
         title: "Porcelina of the Vast Oceans",
-        length: "9:21"
+        length: "9:21",
+        albumTitle: "Mellon Collie and the Infinite sadness"
       },
       {
         title: "Take Me Down",
-        length: "2:52"
+        length: "2:52",
+        albumTitle: "Mellon Collie and the Infinite sadness"
       }
     ],
     [
       {
         title: "Six Shot Morning",
-        length: "4:56"
+        length: "4:56",
+        albumTitle: "Dopamine Chamber"
       },
       {
         title: "Marianne",
-        length: "3:45"
+        length: "3:45",
+        albumTitle: "Dopamine Chamber"
       },
       {
         title: "Mimesis",
-        length: "3:51"
+        length: "3:51",
+        albumTitle: "Dopamine Chamber"
       },
       {
         title: "Happy for You",
-        length: "3:48"
+        length: "3:48",
+        albumTitle: "Dopamine Chamber"
       },
       {
         title: "Demolition",
-        length: "3:19"
+        length: "3:19",
+        albumTitle: "Dopamine Chamber"
       },
       {
         title: "Tongue",
-        length: "3:13"
+        length: "3:13",
+        albumTitle: "Dopamine Chamber"
       },
       {
         title: "One Man",
-        length: "4:58"
+        length: "4:58",
+        albumTitle: "Dopamine Chamber"
       },
       {
         title: "Where Is Gone?",
-        length: "5:16"
+        length: "5:16",
+        albumTitle: "Dopamine Chamber"
       },
       {
         title: "You Miss Me",
-        length: "3:35"
+        length: "3:35",
+        albumTitle: "Dopamine Chamber"
       },
       {
         title: "Japan",
-        length: "3:15"
+        length: "3:15",
+        albumTitle: "Dopamine Chamber"
       },
       {
         title: "Intimate",
-        length: "3:57"
+        length: "3:57",
+        albumTitle: "Dopamine Chamber"
       }
     ],
     [
       {
         title: "Hello",
-        length: "3:21"
+        length: "3:21",
+        albumTitle: "(What's the story) Morning glory"
       },
       {
         title: "Roll with It",
-        length: "3:59"
+        length: "3:59",
+        albumTitle: "(What's the story) Morning glory"
       },
       {
 
         title: "Wonderwall",
-        length: "4:18"
+        length: "4:18",
+        albumTitle: "(What's the story) Morning glory"
       },
       {
         title: "Don't Look Back in Anger",
-        length: "4:48"
+        length: "4:48",
+        albumTitle: "(What's the story) Morning glory"
       },
       {
         title: "Hey Now!",
-        length: "5:41"
+        length: "5:41",
+        albumTitle: "(What's the story) Morning glory"
       },
       {
         title: "Untitled",
-        length: "0:44"
+        length: "0:44",
+        albumTitle: "(What's the story) Morning glory"
       },
       {
         title: "Some Might Say",
-        length: "5:29"
+        length: "5:29",
+        albumTitle: "(What's the story) Morning glory"
       },
       {
         title: "Cast No Shadow",
-        length: "4:51"
+        length: "4:51",
+        albumTitle: "(What's the story) Morning glory"
       },
       {
         title: "She's Electric",
-        length: "3:40"
+        length: "3:40",
+        albumTitle: "(What's the story) Morning glory"
       },
       {
         title: "Morning Glory",
-        length: "5:03"
+        length: "5:03",
+        albumTitle: "(What's the story) Morning glory"
       },
       {
         title: "Untitled ",
-        length: "0:39"
+        length: "0:39",
+        albumTitle: "(What's the story) Morning glory"
       },
       {
         title: "Champagne Supernova",
-        length: "7:27"
+        length: "7:27",
+        albumTitle: "(What's the story) Morning glory"
       }
     ]
   ]
@@ -424,6 +494,20 @@ function App() {
       <h1 onClick={() => { setIsMoviesOpen(!isMoviesOpen) }}>{isMoviesOpen ? "▾ " : "▸ "}Movies</h1>
       {isMoviesOpen && (
         <div id="allmovies" className="col">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Wpisz tytuł"
+            id="movie-search"
+            onChange={(e) => {
+              movieSearch(e)
+            }}
+          />
+          {MovieText !== "" && (
+            <div id="moviessearching">
+             <p>Wyszukujesz: {MovieText}</p>
+            </div>
+          )}
           <div className="row justify-content-center">
             {moviesResult}
           </div>
@@ -440,6 +524,18 @@ function App() {
       <h1 onClick={() => { setIsBooksOpen(!isBooksOpen) }}>{isBooksOpen ? "▾ " : "▸ "}Books</h1>
       {isBooksOpen && (
         <div id="allbooksdiv" className="col">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Wpisz tytuł"
+            id="book-search"
+            onChange={bookSearch}
+          />
+            {BookText !== "" && (
+            <div id="bookssearching">
+             <p>Wyszukujesz: {BookText}</p>
+            </div>
+          )}
 
           <div className="row justify-content-center">
             {booksResult}
@@ -457,6 +553,19 @@ function App() {
       <h1 onClick={() => { setIsAlbumsOpen(!isAlbumsOpen) }}>{isAlbumsOpen ? "▾ " : "▸ "}Music Albums</h1>
       {isAlbumsOpen && (
         <div id="allalbumsdiv" className="col">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Wpisz tytuł"
+            id="album-search"
+            onChange={albumSearch}
+
+          />
+            {AlbumText !== "" && (
+            <div id="albumssearching">
+             <p>Wyszukujesz: {AlbumText}</p>
+            </div>
+          )}
           <div className="row justify-content-center">
 
             {albumsResult}
