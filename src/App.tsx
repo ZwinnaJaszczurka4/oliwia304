@@ -153,7 +153,6 @@ function App() {
   const [isBooksByYearOpen, setIsBooksByYearOpen] = useState(false);
   const [isAlbumsOpen, setIsAlbumsOpen] = useState(false);
   const [isMaxtracksOpen, setIsMaxtracksOpen] = useState(false);
-  const [isMovieSearchingOpen, setIsMovieSearchingOpen] = useState(false);
   const [MovieText, changeMovieText] = useState("");
   const [BookText, changeBookText] = useState("");
   const [AlbumText, changeAlbumText] = useState("");
@@ -163,7 +162,7 @@ function App() {
     changeMovieText(event.target.value);
   }
 
-    function bookSearch(event: React.ChangeEvent<HTMLInputElement>) {
+  function bookSearch(event: React.ChangeEvent<HTMLInputElement>) {
     console.log(event.target.value);
     changeBookText(event.target.value);
   }
@@ -445,6 +444,31 @@ function App() {
     );
   });
 
+
+  const searchingMoviesResult = [...filmy].filter(film => film.name.toLowerCase().includes(MovieText.toLowerCase())).map(film => {
+    return (
+      <div className="col">
+        <Movie name={film.name} year={film.year} photo={film.photo} rating={film.rating} />
+      </div>
+    );
+  });
+
+  const searchingBooksResult = [...books].filter(book => book.title.toLowerCase().includes(BookText.toLowerCase())).map(book => {
+    return (
+      <div className="col">
+        <Book cover={book.cover} title={book.title} year={book.year} pages={book.pages} />
+      </div>
+    );
+  });
+
+  const searchingAlbumsResult = [...albums].filter(album => album.title.toLowerCase().includes(AlbumText.toLowerCase())).map(album => {
+    return (
+      <div className="col">
+        <MusicAlbum title={album.title} bandName={album.bandName} genre={album.genre} year={album.year} cover={album.cover} tracklist={album.tracklist} />
+      </div>
+    );
+  });
+
   const moviesAfter2010 = filmy.filter(film => film.year > 2010).map(film => {
     return (
       <div className="col">
@@ -503,11 +527,23 @@ function App() {
               movieSearch(e)
             }}
           />
-          {MovieText !== "" && (
-            <div id="moviessearching">
-             <p>Wyszukujesz: {MovieText}</p>
+          {MovieText != "" && (
+            <div id="allsearchingthing">
+              <div id="moviessearching">
+                <p>Wyszukujesz: {MovieText}</p>
+              </div>
+              <div className="row justify-content-center">
+                {searchingMoviesResult}
+                {searchingMoviesResult.length == 0 && (
+
+                  <span className="text-warning">Nie znaleziono filmu</span>
+
+                )}
+              </div>
             </div>
           )}
+
+
           <div className="row justify-content-center">
             {moviesResult}
           </div>
@@ -531,11 +567,22 @@ function App() {
             id="book-search"
             onChange={bookSearch}
           />
-            {BookText !== "" && (
-            <div id="bookssearching">
-             <p>Wyszukujesz: {BookText}</p>
+          {BookText != "" && (
+            <div id="allsearchingthing">
+              <div id="bookssearching">
+                <p>Wyszukujesz: {BookText}</p>
+              </div>
+              <div className="row justify-content-center">
+                {searchingBooksResult}
+                {searchingBooksResult.length == 0 && (
+
+                  <span className="text-warning">Nie znaleziono książki</span>
+
+                )}
+              </div>
             </div>
           )}
+  
 
           <div className="row justify-content-center">
             {booksResult}
@@ -561,9 +608,21 @@ function App() {
             onChange={albumSearch}
 
           />
-            {AlbumText !== "" && (
-            <div id="albumssearching">
-             <p>Wyszukujesz: {AlbumText}</p>
+      
+
+           {AlbumText != "" && (
+            <div id="allsearchingthing">
+              <div id="albumssearching">
+                <p>Wyszukujesz: {AlbumText}</p>
+              </div>
+              <div className="row justify-content-center">
+                {searchingAlbumsResult}
+                {searchingAlbumsResult.length == 0 && (
+
+                  <span className="text-warning">Nie znaleziono albumu</span>
+
+                )}
+              </div>
             </div>
           )}
           <div className="row justify-content-center">
